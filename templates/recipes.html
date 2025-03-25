@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Saved Recipes</title>
+</head>
+<body>
+    <h1>All Saved Recipes</h1>
+    <ul>
+        {% for recipe in recipes %}
+            <li>
+                <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}">
+                    {{ recipe.name }} ({{ recipe.servings }} servings)
+                </a>
+            </li>
+        {% else %}
+            <li>No recipes found.</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('home') }}">← Back to Home</a>
+</body>
+</html>

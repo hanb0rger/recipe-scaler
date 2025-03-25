@@ -11,7 +11,9 @@
     <script defer src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
+    <a href="{{ url_for('recipes') }}">View Saved Recipes</a>
     <h1> <span class="orange">Scale</span><span class="black">MyRecipe</span></h1>
+
     <div class="container">
         <div class="input">
             <label for="title"><input class="tile" id="RecipeName" placeholder="Recipe Name"></label>
@@ -20,6 +22,7 @@
             <div id="ingredients_list">
             </div>
             <button onclick="addIngredient()">+ Add ingredient</button>
+            <button onclick="saveRecipe()">Save recipe</button>
         </div>
 
         <div class="output">

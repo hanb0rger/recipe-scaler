@@ -60,3 +60,45 @@ function scaleRecipe() {
     })
     .catch(error => console.error("Error:", error));
 }
+
+function saveRecipe() {
+    let ingredientDivs = document.querySelectorAll('#ingredients_list .ingredient');
+    let ingredients = [];
+
+    ingredientDivs.forEach(div => {
+        let name = div.querySelector('.name').value;
+        let amount = div.querySelector('.amount').value;
+        let unit = div.querySelector('.unit').value;
+
+        if (name && amount) {
+            ingredients.push({ name, amount, unit });
+        }
+    });
+
+    let recipeName = document.getElementById('RecipeName').value;
+    let servings = document.getElementById('original_serving').value;
+
+    if (!recipeName || !servings || ingredients.length === 0) {
+        alert("Please fill out the recipe name, servings, and at least one ingredient.");
+        return;
+    }
+
+    fetch('/save_recipe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            name: recipeName,
+            servings: servings,
+            ingredients: ingredients
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Recipe saved successfully!");
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Error saving recipe:', error);
+        alert("There was an error saving the recipe.");
+    });
+}
