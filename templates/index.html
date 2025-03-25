@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScaleMyRecipe</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <h1> <span class="orange">Scale</span><span class="black">MyRecipe</span></h1>
+    <div class="container">
+        <div class="input">
+            <label for="title"><input class="tile" id="RecipeName" placeholder="Recipe Name"></label>
+            <h2>Proportions: <input type="number" id="original_serving" value="2" min="1"> people</h2>
+            <hr>
+            <div id="ingredients_list">
+            </div>
+            <button onclick="addIngredient()">+ Add ingredient</button>
+        </div>
+
+        <div class="output">
+            <h2>Proportions: <input type="number" id="new_serving" value="4"  min="1"> people</h2>
+            <hr>
+            <div id="scaled_ingredients_list"></div>
+        </div>
+    </div>
+
+    <button onclick="scaleRecipe()">Scale Recipe</button>
+
+</body>
+</html>
