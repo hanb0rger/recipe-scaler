@@ -1,7 +1,17 @@
 from flask import Flask, render_template, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-from models import db, Ingredient, app  # Ensure correct imports
+app = Flask(__name__)
+
+# Database Configuration (SQLite for simplicity)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///recipes.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+from models import db, Ingredient # Ensure correct imports
 
 @app.route('/')
 def home():

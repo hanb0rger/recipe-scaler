@@ -54,7 +54,7 @@ function scaleRecipe() {
         output.innerHTML = "";  // Clear previous content
         data.scaled_ingredients.forEach(ingredient => {
             let div = document.createElement("div");
-            div.innerHTML = `class="" ${ingredient.name}: ${ingredient.amount} ${ingredient.unit}`;
+            div.innerHTML = `${ingredient.name}: ${ingredient.amount} ${ingredient.unit}`;
             output.appendChild(div);
         });
     })

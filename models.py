@@ -1,13 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
-
-# Database Configuration (SQLite for simplicity)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///recipes.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-db = SQLAlchemy(app)
+from app import app, db
 
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
