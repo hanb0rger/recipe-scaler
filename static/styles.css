@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
+
 h2{
     font-family: 'Quicksand', sans-serif;
     font-size: 16px;
@@ -55,7 +56,6 @@ button{
     padding: 10px 10px;
     border-radius: 5px;
     cursor: pointer;
-    margin: 10px;
     transition: all .2s ease-in-out;
 }
 
@@ -116,4 +116,57 @@ body{
     display: flex;
     justify-content: space-between;
     margin: 5px 0;
+}
+#RecipeName {
+    font-size: 18px; 
+    font-weight: bolder; 
+    border: 2px solid #ff9900; 
+    background-color: #fff7e6; 
+    padding: 10px; 
+    width: 330px; 
+    display: block; 
+    margin: 10px auto;
+    border-radius: 8px; 
+    text-align: center; 
+    transition: all 0.3s ease-in-out;
+}
+
+#RecipeName:focus {
+    border-color: darkorange;
+    box-shadow: 0 0 8px rgba(255, 165, 0, 0.7);
+}
+
+savedTitle {
+    font-size: 18px; 
+    font-weight: bolder; 
+    border: 2px solid #ff9900; 
+    background-color: #fff7e6; 
+    padding: 10px; 
+    width: 330px; 
+    display: block; 
+    margin: 10px auto;
+    border-radius: 8px; 
+    text-align: center; 
+    transition: all 0.3s ease-in-out;
+}
+
+/* Style for both pages */
+#scaled_ingredients_list {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+#scaled_ingredients_list ul {
+    padding-left: 0;
+}
+
+#scaled_ingredients_list li {
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+}
+
+#scaled_ingredients_list li:last-child {
+    border-bottom: none;
 }

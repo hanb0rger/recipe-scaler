@@ -1,21 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saved Recipes</title>
+  
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
+
 <body>
-    <h1>All Saved Recipes</h1>
-    <ul>
+    <h1> <span class="orange">Scale</span><span class="black">MyRecipe</span></h1>
+    <h2>Saved Recipes</h2>
+
+    <label for="saved_recipes">Load a saved recipe:</label>
+    <select id="saved_recipes" onchange="loadRecipe(this.value)">
+        <option value="">Select a recipe...</option>
         {% for recipe in recipes %}
-            <li>
-                <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}">
-                    {{ recipe.name }} ({{ recipe.servings }} servings)
-                </a>
-            </li>
-        {% else %}
-            <li>No recipes found.</li>
+            <option value="{{ recipe.id }}">{{ recipe.name }}</option>
         {% endfor %}
-    </ul>
-    <a href="{{ url_for('home') }}">← Back to Home</a>
+    </select>
+
+    <h2>Recipe Details</h2>
+    <input type="text" id="RecipeName" placeholder="Recipe Name" readonly>
+
+    <div class="container">
+        <div class="input">
+            <h2>Proportions:<input type="number" id="original_serving" placeholder="Original Servings" readonly></h2>
+            <hr>
+            <div id="ingredients_list">
+                <!-- Ingredients will be loaded here -->
+            </div>
+        </div>
+        <div class="output">
+            <label for="new_serving" style="font-weight: bolder;">New Servings:</label>
+            <input type="number" id="new_serving" placeholder="New Servings">
+            <hr>
+            <div id="scaled_ingredients_list">
+                <!-- Scaled ingredients will be displayed here -->
+            </div>
+    </div>
+
+    <button onclick="scaleRecipe()">Scale Recipe</button>
+
+    <button id="deleteRecipeBtn" onclick="deleteRecipe()" style="display: none; background-color: red; color: white;">
+        Delete Recipe
+    </button>
+
 </body>
 </html>

@@ -10,29 +10,37 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script defer src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
-<body>
-    <a href="{{ url_for('recipes') }}">View Saved Recipes</a>
-    <h1> <span class="orange">Scale</span><span class="black">MyRecipe</span></h1>
 
+<body>
+    <h1> <span class="orange">Scale</span><span class="black">MyRecipe</span></h1>
+    <div style="display: inline-flex; align-items: center; gap: 8px;">
+        <label for="RecipeName">
+            <input class="tile" id="RecipeName" placeholder="Recipe Name">
+        </label>
+        <button onclick="saveRecipe()">Save recipe</button>
+        <a href="{{ url_for('recipes') }}">
+            <button>View Saved Recipes</button>
+        </a>        
+    </div>    
     <div class="container">
         <div class="input">
-            <label for="title"><input class="tile" id="RecipeName" placeholder="Recipe Name"></label>
-            <h2>Proportions: <input type="number" id="original_serving" value="2" min="1"> people</h2>
+            <h2>Proportions: <input type="number" id="original_serving" value="2" min="1"> servings</h2>
             <hr>
             <div id="ingredients_list">
             </div>
             <button onclick="addIngredient()">+ Add ingredient</button>
-            <button onclick="saveRecipe()">Save recipe</button>
         </div>
 
         <div class="output">
-            <h2>Proportions: <input type="number" id="new_serving" value="4"  min="1"> people</h2>
+            <h2>Proportions: <input type="number" id="new_serving" value="4"  min="1"> servings</h2>
             <hr>
             <div id="scaled_ingredients_list"></div>
         </div>
     </div>
 
     <button onclick="scaleRecipe()">Scale Recipe</button>
+    <button onclick="printIngredients()">Print Scaled Recipe</button>
+
 
 </body>
 </html>
