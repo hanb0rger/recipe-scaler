@@ -1,10 +1,16 @@
-// add ingredient button 
+/**
+ * Adds a new ingredient input row to the ingredients list
+ * Creates a div with input fields for name, amount, and unit selection
+ * Includes a trash icon for deletion
+ */
 function addIngredient() {
+    // Get the container element for ingredients
     let container = document.getElementById('ingredients_list');
+    // Create new div element for this ingredient
     let div = document.createElement('div');
     div.classList.add('ingredient');
 
-    // HTML for the ingredient div
+    // Build the HTML structure for the ingredient row
     div.innerHTML = 
         `
         <button class="trash" onclick="deleteIngredient(event)"><i class="fa fa-trash"></i></button>
@@ -14,51 +20,64 @@ function addIngredient() {
             <option>ml</option>
             <option>L</option>
             <option>fl oz</option>
+            <option>lb</option>
             <option>g</option>
             <option>kg</option>
             <option>oz</option>
-            <option>cup</option>
+            <option>cups</option>
             <option>tbsp</option>
             <option>tsp</option>
-            <option>piece</option>
+            <option>pieces</option>
         </select>
         `;
-    // adds the new ingredient div to the container
+    // Append the new ingredient row to the container
     container.appendChild(div);
 }
 
-
-// function to delete an ingredient when the trash icon is clicked
+/**
+ * Removes an ingredient row when its trash icon is clicked
+ * @param {Event} event - The click event from the trash button
+ */
 function deleteIngredient(event) {
+    // Find the closest parent ingredient div
     let ingredientDiv = event.target.closest('.ingredient');
+    // Remove the ingredient from DOM
     ingredientDiv.remove();
-    console.log("Deleted");
+    console.log("Deleted ingredient");
 }
 
+/**
+ * Saves the current recipe to the database
+ * Collects all ingredients, validates inputs, and sends to server
+ */
 function saveRecipe() {
+    // Get all ingredient divs from the list
     let ingredientDivs = document.querySelectorAll('#ingredients_list .ingredient');
     let ingredients = [];
 
+    // Extract values from each ingredient input
     ingredientDivs.forEach(div => {
         let name = div.querySelector('.name').value;
         let amount = div.querySelector('.amount').value;
         let unit = div.querySelector('.unit').value;
 
+        // Only include ingredients with both name and amount
         if (name && amount) {
             ingredients.push({ name, amount, unit });
         }
     });
 
+    // Get recipe metadata
     let recipeName = document.getElementById('RecipeName').value;
     let servings = document.getElementById('original_serving').value;
     
-    // check if the recipe name and servings are filled
+    // Validate required fields are filled
     if (!recipeName || !servings || ingredients.length === 0) {
         alert("Please fill out the recipe name, servings, and at least one ingredient.");
         return;
     }
 
-    // check if the servings is a number
+    // Send recipe data to server
     fetch('/save_recipe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -71,7 +90,7 @@ function saveRecipe() {
     .then(response => response.json())
     .then(data => {
         alert("Recipe saved successfully!");
-        console.log(data);
+        console.log("Save response:", data);
     })
     .catch(error => {
         console.error('Error saving recipe:', error);
@@ -79,15 +98,19 @@ function saveRecipe() {
     });
 }
 
-// function to print the scaled ingredients
+/**
+ * Opens a print-friendly window with the scaled ingredients
+ */
 function printIngredients() {
     let content = document.getElementById("scaled_ingredients_list").innerHTML;
     
+    // Check if there's content to print
     if (!content.trim()) {
         alert("There are no scaled ingredients to print!");
         return;
     }
 
+    // Create new window with print styling
     let printWindow = window.open('', '_blank');
     printWindow.document.write(`
         <html>
@@ -114,41 +137,51 @@ function printIngredients() {
     printWindow.document.close();
 }
 
-// function to dalete a saved recipe
+/**
+ * Deletes a saved recipe after confirmation
+ */
 function deleteRecipe() {
-            let recipeId = document.getElementById("deleteRecipeBtn").getAttribute("data-id");
-            if (!recipeId) return;
+    let recipeId = document.getElementById("deleteRecipeBtn").getAttribute("data-id");
+    if (!recipeId) return;
 
-            if (!confirm("Are you sure you want to delete this recipe?")) return;
+    // Confirm deletion with user
+    if (!confirm("Are you sure you want to delete this recipe?")) return;
 
-            fetch(`/delete_recipe/${recipeId}`, { method: "DELETE" })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                location.reload(); // Reload to update dropdown and clear fields
-            })
-            .catch(error => console.error("Error deleting recipe:", error));
-        }   
+    // Send delete request to server
+    fetch(`/delete_recipe/${recipeId}`, { method: "DELETE" })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        location.reload(); // Refresh to update UI
+    })
+    .catch(error => console.error("Error deleting recipe:", error));
+}   
 
-// Unified scaleRecipe function
+/**
+ * Scales recipe ingredients based on serving size changes
+ * Handles both newly inputted and saved recipes
+ */
 function scaleRecipe() {
+    // Get serving sizes from inputs
     const originalServing = parseFloat(document.getElementById("original_serving").value);
     const newServing = parseFloat(document.getElementById("new_serving").value);
     
+    // Validate inputs
     if (!originalServing || !newServing || newServing <= 0) {
         alert("Please enter valid serving sizes.");
         return;
     }
 
+    // Calculate scaling factor
     const scaleFactor = newServing / originalServing;
     const outputDiv = document.getElementById("scaled_ingredients_list");
     outputDiv.innerHTML = "";
 
-    // Check which page we're on by looking for input fields
+    // Determine if we're on main page or recipes page
     const isMainPage = document.querySelector("#ingredients_list .ingredient .name") !== null;
 
     if (isMainPage) {
-        // Handle main page (index.html) - user inputted ingredients
+        // Handle newly inputted ingredients
         const ingredients = [];
         document.querySelectorAll("#ingredients_list .ingredient").forEach(div => {
             const name = div.querySelector(".name").value;
@@ -170,6 +203,7 @@ function scaleRecipe() {
         ul.style.listStyleType = "none";
         ul.style.padding = "0";
 
+        // Scale each ingredient and add to list
         ingredients.forEach(ing => {
             const scaledAmount = parseFloat(ing.amount) * scaleFactor;
             
@@ -190,7 +224,7 @@ function scaleRecipe() {
 
         outputDiv.appendChild(ul);
     } else {
-        // Handle recipes page (recipes.html) - database ingredients
+        // Handle saved recipes from database
         const ingredientElements = document.querySelectorAll("#ingredients_list li");
         if (ingredientElements.length === 0) {
             alert("No ingredients found to scale!");
@@ -201,16 +235,18 @@ function scaleRecipe() {
         ul.style.listStyleType = "none";
         ul.style.padding = "0";
 
+        // Process each saved ingredient
         ingredientElements.forEach(li => {
             const textElement = li.querySelector("span");
             if (!textElement) return;
             
+            // Parse ingredient text into components
             const text = textElement.textContent.trim();
             const parts = text.split(/\s+/);
             const amount = parseFloat(parts[0]);
             
             if (isNaN(amount)) {
-                // For non-numeric amounts
+                // Handle non-numeric amounts (like "to taste")
                 const newLi = document.createElement("li");
                 newLi.innerHTML = li.innerHTML;
                 ul.appendChild(newLi);
@@ -221,6 +257,7 @@ function scaleRecipe() {
             const name = parts.slice(2).join(" ");
             const scaledAmount = amount * scaleFactor;
             
+            // Create scaled ingredient display
             const newLi = document.createElement("li");
             newLi.style.marginBottom = "8px";
             
@@ -240,42 +277,39 @@ function scaleRecipe() {
     }
 }
 
-    // Display scaled ingredients
-    const outputDiv = document.getElementById("scaled_ingredients_list");
-    outputDiv.innerHTML = "";
-    scaledIngredients.forEach(ing => {
-        const div = document.createElement("div");
-        div.textContent = `${ing.name}: ${ing.amount.toFixed(2)} ${ing.unit}`;
-        outputDiv.appendChild(div);
-    });
-
-// Modified loadRecipe function
+/**
+ * Loads a saved recipe from the database
+ * @param {number} recipeId - ID of the recipe to load
+ */
 function loadRecipe(recipeId) {
     if (!recipeId) return;
 
+    // Fetch recipe data from server
     fetch(`/get_recipe/${recipeId}`)
         .then(response => response.json())
         .then(data => {
+            // Update recipe header info
             document.getElementById("RecipeName").value = data.name;
             document.getElementById("original_serving").value = data.servings;
 
             const ingredientsList = document.getElementById("ingredients_list");
             ingredientsList.innerHTML = "";
 
-            // Create a clean unordered list
+            // Create clean list structure
             const ul = document.createElement("ul");
-            ul.style.listStyleType = "none";  // Remove bullets
+            ul.style.listStyleType = "none";
             ul.style.padding = "0";
 
+            // Add each ingredient to the list
             data.ingredients.forEach(ingredient => {
                 const li = document.createElement("li");
-                li.style.marginBottom = "8px";  // Add spacing between items
+                li.style.marginBottom = "8px";
                 
-                // Create ingredient text with amount and unit
+                // Create text display for ingredient
                 const ingredientText = document.createElement("span");
                 ingredientText.textContent = `${ingredient.amount} ${ingredient.unit} ${ingredient.name}`;
                 
-                // Add a subtle separator
+                // Add visual separator
                 const separator = document.createElement("hr");
                 separator.style.margin = "8px 0";
                 separator.style.opacity = "0.2";
@@ -287,16 +321,16 @@ function loadRecipe(recipeId) {
 
             ingredientsList.appendChild(ul);
 
-            // Show delete button
+            // Enable delete button for this recipe
             document.getElementById("deleteRecipeBtn").style.display = "block";
             document.getElementById("deleteRecipeBtn").setAttribute("data-id", recipeId);
         })
         .catch(error => console.error("Error loading recipe:", error));
 }
 
-// Run when the DOM is fully loaded
+// Initialize when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Attach event listeners for the recipes page
+    // Set up recipe dropdown change listener
     const recipeDropdown = document.getElementById('saved_recipes');
     if (recipeDropdown) {
         recipeDropdown.addEventListener('change', function() {
@@ -304,14 +338,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Attach scale button (works for both pages)
+    // Replace inline onclick with proper event listener
     const scaleButton = document.querySelector('button[onclick="scaleRecipe()"]');
     if (scaleButton) {
         scaleButton.removeAttribute('onclick');
         scaleButton.addEventListener('click', scaleRecipe);
     }
 
-    // Attach delete button if it exists
+    // Set up delete button if present
     const deleteButton = document.getElementById('deleteRecipeBtn');
     if (deleteButton) {
         deleteButton.addEventListener('click', deleteRecipe);

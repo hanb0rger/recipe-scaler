@@ -46,8 +46,6 @@ def scale():
             "amount": scaled_amount,
             "unit": ing["unit"]
         })
-
-
     return jsonify({"scaled_ingredients": scaled_ingredients})
 
 # route that returns the recipe details along with its ingredients
