@@ -151,3 +151,10 @@ body{
     border: 2px solid orange; /* Darker red */
     color: orange;
 }
+
+#ingredients_list{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}

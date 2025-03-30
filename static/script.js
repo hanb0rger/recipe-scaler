@@ -25,6 +25,7 @@ function addIngredient() {
             <option>tsp</option>
             <option>pieces</option>
         </select>
+        
         `;
     // Append the new ingredient row to the container
     container.appendChild(div);
@@ -98,33 +99,101 @@ function saveRecipe() {
  * Opens a print-friendly window with the scaled ingredients
  */
 function printIngredients() {
-    let content = document.getElementById("scaled_ingredients_list").innerHTML;
+    const newServing = document.getElementById("new_serving").value;
+    const recipeName = document.getElementById("RecipeName").value;
     
-    // Check if there's content to print
-    if (!content.trim()) {
-        alert("There are no scaled ingredients to print!");
+    // Get the container and check for LI elements
+    const scaledList = document.getElementById("scaled_ingredients_list");
+    const ingredients = scaledList.querySelectorAll("li");
+    
+    if (ingredients.length === 0) {
+        alert("There are no scaled ingredients to print! Please scale the recipe first.");
         return;
     }
 
-    // Create new window with print styling
-    let printWindow = window.open('', '_blank');
+    // Create bullet-point content
+    const bulletContent = Array.from(ingredients).map(li => {
+        // Clone the LI to preserve its content and styling
+        const clonedLi = li.cloneNode(true);
+        // Add our square bullet before the content
+        clonedLi.innerHTML = `
+            <span style="display:inline-block; width:12px; height:12px; border:2px solid #4CAF50; margin-right:10px;"></span>
+            ${clonedLi.innerHTML}
+        `;
+        return clonedLi.outerHTML;
+    }).join('');
+
+    const printWindow = window.open('', '_blank');
     printWindow.document.write(`
         <html>
         <head>
-            <title>Scaled Ingredients</title>
+            <title>${recipeName || 'Scaled Recipe'}</title>
             <style>
-                body { font-family: Arial, sans-serif; padding: 20px; }
-                h2 { text-align: center; }
-                .ingredient-list { margin-top: 20px; }
+                @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+                
+                body {
+                    font-family: 'Poppins', sans-serif;
+                    padding: 30px;
+                    color: #333;
+                    max-width: 800px;
+                    margin: 0 auto;
+                }
+                .header {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                .recipe-title {
+                    font-size: 24px;
+                    font-weight: 600;
+                    color: #2c3e50;
+                    margin-bottom: 10px;
+                }
+                .serving-info {
+                    font-size: 16px;
+                    margin: 15px 0;
+                    background: #f8f9fa;
+                    padding: 8px 15px;
+                    border-radius: 20px;
+                    display: inline-block;
+                }
+                .ingredient-list {
+                    margin-top: 25px;
+                    padding-left: 0;
+                    list-style: none;
+                }
+                .ingredient-list li {
+                    padding: 10px 0;
+                    border-bottom: 1px dashed #eee;
+                    display: flex;
+                    align-items: center;
+                }
+                @media print {
+                    body {
+                        padding: 15mm;
+                    }
+                }
             </style>
         </head>
         <body>
-            <h2>Scaled Ingredients</h2>
-            <div class="ingredient-list">${content}</div>
+            <div class="header">
+                <div class="recipe-title">${recipeName || 'Scaled Recipe'}</div>
+                <div class="serving-info">Servings: ${newServing}</div>
+            </div>
+            
+            <ul class="ingredient-list">
+                ${bulletContent}
+            </ul>
+            
+            <div style="text-align: center; margin-top: 40px; color: #aaa;">
+                Printed from ScaleMyRecipe
+            </div>
+            
             <script>
                 window.onload = function() {
                     window.print();
-                    window.onafterprint = function() { window.close(); };
+                    setTimeout(function() {
+                        window.close();
+                    }, 300);
                 };
             <\/script>
         </body>
