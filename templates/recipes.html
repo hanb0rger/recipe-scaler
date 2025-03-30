@@ -11,15 +11,17 @@
 </head>
 
 <body>
-    <h1> <span class="orange">Scale</span><span class="black">MyRecipe</span></h1>
-    <label for="saved_recipes">Load a saved recipe:</label>
-    <select id="saved_recipes" onchange="loadRecipe(this.value)">
-        <option value="">Select a recipe...</option>
-        {% for recipe in recipes %}
-            <option value="{{ recipe.id }}">{{ recipe.name }}</option>
-        {% endfor %}
-    </select>
-    <input type="text" id="RecipeName" placeholder="Recipe Name" readonly>
+    <h1><a href="/" class="orange">Scale</a><a href="/" class="black">MyRecipe</a></h1>
+    <div style="display: inline-flex; align-items: center; gap: 8px;"> 
+        <label for="saved_recipes" style="justify-content: left;">Load a saved recipe:</label>
+        <select id="saved_recipes" onchange="loadRecipe(this.value)">
+            <option value="">Select a recipe...</option>
+            {% for recipe in recipes %}
+                <option value="{{ recipe.id }}">{{ recipe.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" id="RecipeName" placeholder="Recipe Name" readonly>
+    </div>
 
     <div class="container">
         <div class="input">
@@ -40,11 +42,9 @@
         </div>
     </div>
     
-    <div class="buttons-container">
+    <div style="display: inline-flex; align-items: center; gap: 8px;">
+        <button class="deleteBtn" id="deleteRecipeBtn" onclick="deleteRecipe()" style="display: none;">Delete Recipe</button>
         <button onclick="scaleRecipe()" class="scale-btn">Scale Recipe</button>
-        <button class="deleteBtn" id="deleteRecipeBtn" onclick="deleteRecipe()" style="display: none;">
-            Delete Recipe
-        </button>
         <button onclick="printIngredients()">Print Scaled Recipe</button>
     </div>
 

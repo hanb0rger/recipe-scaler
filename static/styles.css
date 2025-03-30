@@ -8,13 +8,16 @@ h2{
 
 .orange{
     color:  #ff9900;
+    text-decoration:none;
 }
 
 .lightorange{
     color:  #ffc258;
 }
+
 .black {
     color:  #000000;
+    text-decoration:none;
 }
 
 hr{

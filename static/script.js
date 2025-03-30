@@ -1,8 +1,4 @@
-/**
- * Adds a new ingredient input row to the ingredients list
- * Creates a div with input fields for name, amount, and unit selection
- * Includes a trash icon for deletion
- */
+
 function addIngredient() {
     // Get the container element for ingredients
     let container = document.getElementById('ingredients_list');
@@ -279,7 +275,7 @@ function scaleRecipe() {
 
 /**
  * Loads a saved recipe from the database
- * @param {number} recipeId - ID of the recipe to load
+@param {number} recipeId - ID of the recipe to load
  */
 function loadRecipe(recipeId) {
     if (!recipeId) return;
